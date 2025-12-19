@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Smart Student Complaint Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="enhancements.css">
+    <style>
+        .page-header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2.5rem;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .page-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-header-title {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .page-header-title span {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            opacity: 0.9;
+        }
+
+        .page-header-title h2 {
+            color: white;
+            margin: 0.1rem 0 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .logout-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            background: var(--status-error);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .logout-button:hover {
+            background: #B91C1C;
+            transform: translateY(-1px);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 3rem 2rem;
+            background: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dashboard-wrapper {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .nav-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-md);
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.15);
+            border-color: var(--primary);
+        }
+
+        .nav-card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .nav-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .dashboard-title {
+                font-size: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .nav-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div class="page-header-left">
+            <button class="back-button" onclick="goBackToLogin()">
+                <span>←</span>
+                Back
+            </button>
+            <div class="page-header-title">
+                <span>Admin Panel</span>
+                <h2>Student Complaint Management System</h2>
+            </div>
+        </div>
+        <button class="logout-button" data-tooltip="Sign out" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="main-content">
+        <div class="dashboard-wrapper">
+            <h1 class="dashboard-title">Admin Dashboard</h1>
+            <div class="cards-grid">
+                <a href="admin-all-complaints.html" class="nav-card">
+                    <div class="nav-card-icon">📋</div>
+                    <h3 class="nav-card-title">All Complaints</h3>
+                </a>
+                <a href="admin-pending.html" class="nav-card">
+                    <div class="nav-card-icon">⏳</div>
+                    <h3 class="nav-card-title">Pending Complaints</h3>
+                </a>
+                <a href="admin-in-progress.html" class="nav-card">
+                    <div class="nav-card-icon">⚙️</div>
+                    <h3 class="nav-card-title">In Progress Complaints</h3>
+                </a>
+                <a href="admin-resolved.html" class="nav-card">
+                    <div class="nav-card-icon">✅</div>
+                    <h3 class="nav-card-title">Resolved Complaints</h3>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authentication Guard
+        (function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const role = localStorage.getItem('role');
+            
+            if (isLoggedIn !== 'true' || role !== 'admin') {
+                alert('Unauthorized access');
+                window.location.href = 'login.html';
+                return;
+            }
+        })();
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        function goBackToLogin() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

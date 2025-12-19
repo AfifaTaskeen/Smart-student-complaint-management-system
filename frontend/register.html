@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Smart Student Complaint Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="enhancements.css">
+    <style>
+        /* Page specific overrides - Match login.html exactly */
+        body {
+            background: radial-gradient(circle at top left, #EEF2FF 0, var(--bg-color) 50%);
+            color: var(--text-primary);
+        }
+
+        .page-header {
+            background: linear-gradient(to right, var(--primary), #1D4ED8);
+            color: white;
+            padding: 1rem 2.5rem;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-login-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: var(--primary);
+            background: white;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .back-login-button:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+        }
+
+        .page-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #E5E7EB;
+            margin: 0;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-12) var(--space-6);
+            background: var(--bg-color);
+        }
+
+        .register-container {
+            max-width: 420px;
+            width: 100%;
+            padding: var(--space-10) var(--space-8);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-6);
+            text-align: center;
+            letter-spacing: -0.2px;
+        }
+
+        .form-group {
+            margin-bottom: var(--space-4);
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: var(--space-12);
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            outline: none;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.8125rem;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            color: var(--text-primary);
+            background: var(--btn-secondary);
+        }
+
+        .role-selection {
+            margin-bottom: var(--space-4);
+        }
+
+        .role-selection > label {
+            margin-bottom: var(--space-2);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            cursor: pointer;
+            padding: var(--space-3) var(--space-4);
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            flex: 1;
+            transition: all 0.2s ease;
+        }
+
+        .radio-option:hover {
+            background: var(--btn-secondary);
+            border-color: var(--border);
+        }
+
+        .radio-option input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+
+        .radio-option input[type="radio"]:checked + span {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .radio-option:has(input[type="radio"]:checked) {
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--accent);
+        }
+
+        .radio-option span {
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .register-button {
+            width: 100%;
+            padding: var(--space-3);
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: white;
+            background: var(--btn-primary);
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+            margin-top: var(--space-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+
+        .register-button:hover {
+            background: var(--btn-primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .register-button:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .register-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: var(--space-6);
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--border);
+        }
+
+        .login-link a {
+            color: var(--accent);
+            font-weight: 500;
+            text-decoration: none;
+            margin-left: var(--space-1);
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #FEE2E2;
+            color: #DC2626;
+            padding: 10px 12px;
+            margin-bottom: 16px;
+            border: 1px solid #FCA5A5;
+            border-radius: var(--radius-md);
+            font-size: 0.8125rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .register-container {
+                padding: 28px 24px;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h2>STUDENT COMPLAINT MANAGEMENT SYSTEM</h2>
+        <button class="back-login-button" onclick="goBackToLogin()">← Back to Login</button>
+    </div>
+    <div class="main-content">
+        <div class="register-container">
+            <h1>Register</h1>
+            <div id="errorMessage" class="error-message"></div>
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="email">Email ID</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="name@gmail.com"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Enter your password"
+                            required
+                        >
+                        <button type="button" class="password-toggle" id="passwordToggle" onclick="togglePassword()">Show</button>
+                    </div>
+                </div>
+
+                <div class="role-selection">
+                    <label>Select Role</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="role" value="student" required>
+                            <span>Student</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="role" value="admin" required>
+                            <span>Admin</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="register-button" id="registerButton" data-tooltip="Create new account">Register</button>
+            </form>
+
+            <div class="login-link">
+                Already have an account? <a href="login.html">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = document.getElementById('passwordToggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = 'Show';
+            }
+        }
+
+        // Handle registration form submission
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const errorMessageEl = document.getElementById('errorMessage');
+            const registerButton = document.getElementById('registerButton');
+            errorMessageEl.style.display = 'none';
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+            
+            // Validate email format
+            if (!email.toLowerCase().endsWith('@gmail.com')) {
+                errorMessageEl.textContent = 'Email must be a Gmail address (ending with @gmail.com)';
+                errorMessageEl.style.display = 'block';
+                return;
+            }
+            
+            // Validate password length
+            if (password.length < 3) {
+                errorMessageEl.textContent = 'Password must be at least 3 characters long';
+                errorMessageEl.style.display = 'block';
+                return;
+            }
+            
+            registerButton.disabled = true;
+            registerButton.textContent = 'Registering...';
+            
+            try {
+                const response = await fetch('http://localhost:5000/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        role: role
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Registration failed');
+                }
+                
+                // Success - redirect to login
+                alert('Registration successful! Please login with your credentials.');
+                window.location.href = 'login.html';
+            } catch (error) {
+                registerButton.disabled = false;
+                registerButton.textContent = 'Register';
+                
+                errorMessageEl.textContent = error.message || 'Registration failed. Please try again.';
+                errorMessageEl.style.display = 'block';
+                console.error('Registration error:', error);
+            }
+        }
+
+        // Navigate back to login page
+        function goBackToLogin() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

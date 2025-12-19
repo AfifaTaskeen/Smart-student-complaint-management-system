@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Smart Student Complaint Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="enhancements.css">
+    <style>
+        body {
+            background: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        .page-header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .page-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-header-title h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .page-header-title span {
+            display: block;
+            font-size: 0.75rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+        }
+
+        .logout-button {
+            padding: 0.45rem 1rem;
+            font-size: 0.8125rem;
+            color: #ffffff;
+            background: var(--status-error);
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .logout-button:hover {
+            background: #B91C1C;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2.5rem 1.5rem;
+        }
+
+        .form-container {
+            max-width: 720px;
+            width: 100%;
+            background: var(--surface);
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            padding: 2.25rem 2rem 2rem;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.75rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .header-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.4rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.4rem;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            outline: none;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 8.5 2 3.5h8z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            padding-right: 2rem;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2);
+        }
+
+        .primary-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #ffffff;
+            background: var(--btn-primary);
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .submit-button:hover {
+            background: var(--btn-primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .view-button {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #ffffff;
+            background: var(--accent);
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .view-button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .note {
+            margin-top: 1.25rem;
+            padding: 0.9rem 1rem;
+            background: #ECFEFF;
+            border-radius: var(--radius-md);
+            border: 1px dashed #0EA5E9;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .file-select-btn {
+            padding: 0.6rem 1rem;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-select-btn:hover {
+            background: #F1F5F9;
+            border-color: var(--accent);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+            padding: 0.6rem 0.9rem;
+            background: #EEF2FF;
+            border: 1px solid #C7D2FE;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+        }
+
+        .file-info span {
+            flex: 1;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-remove-btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            color: var(--status-error);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .file-remove-btn:hover {
+            background: #FEE2E2;
+        }
+
+        @media (max-width: 900px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 1.75rem 1.5rem;
+            }
+
+            .page-header {
+                padding: 0.9rem 1.25rem;
+            }
+
+            .header-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 1.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div class="page-header-left">
+            <button class="back-button" onclick="goBack()">
+                <span>←</span>
+                Back
+            </button>
+            <div class="page-header-title">
+                <span>Student Dashboard</span>
+                <h2>Smart Student Complaint Management System</h2>
+            </div>
+        </div>
+        <button class="logout-button" data-tooltip="Sign out" onclick="logout()">Logout</button>
+    </div>
+    <div class="main-content">
+        <div class="form-container">
+            <div class="header-section">
+                <div>
+                    <h1>Welcome, Student</h1>
+                    <p class="header-subtitle">
+                        Raise a new complaint or review your previous submissions in a single, clean dashboard.
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <form id="complaintForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="title">Complaint Title</label>
+                        <input 
+                            type="text" 
+                            id="title" 
+                            name="title" 
+                            placeholder="Eg: Wi-Fi issues in hostel block C"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Complaint Description</label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            placeholder="Describe your complaint in detail so the admin can resolve it quickly..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Complaint Category</label>
+                        <select id="category" name="category" required>
+                            <option value="">Select a category</option>
+                            <option value="Hostel">Hostel</option>
+                            <option value="Academics">Academics</option>
+                            <option value="Infrastructure">Infrastructure</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="attachment">Attachment (Optional)</label>
+                        <input 
+                            type="file" 
+                            id="attachment" 
+                            name="attachment" 
+                            accept=".jpg,.jpeg,.png,.pdf"
+                            style="display:none"
+                            onchange="handleFileSelect(event)"
+                        >
+                        <button type="button" class="file-select-btn" onclick="document.getElementById('attachment').click()">Choose File</button>
+                        <div id="fileInfo" class="file-info" style="display:none">
+                            <span id="fileName"></span>
+                            <button type="button" class="file-remove-btn" onclick="removeFile()">✕</button>
+                        </div>
+                        <small style="color:var(--text-secondary);font-size:0.8rem;display:block;margin-top:0.4rem">JPG, PNG, or PDF (Max 5MB)</small>
+                    </div>
+
+                    <button type="submit" class="submit-button" id="submitButton" data-tooltip="Submit your complaint">Submit Complaint</button>
+                </form>
+
+                <div class="primary-actions">
+                    <button 
+                        type="button" 
+                        class="view-button"
+                        data-tooltip="View all your complaints"
+                        onclick="window.location.href='view-my-complaints.html'">
+                        View My Complaints
+                    </button>
+
+                    <div class="note">
+                        Once submitted, your complaint will be routed to the administration team.
+                        You can always return here to track the status in <strong>“View My Complaints”</strong>.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authentication Guard - Check at the very top
+        (function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const role = localStorage.getItem('role');
+            
+            if (isLoggedIn !== 'true' || role !== 'student') {
+                alert('Unauthorized access');
+                window.location.href = 'login.html';
+                return;
+            }
+        })();
+        
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const maxSize = 5 * 1024 * 1024; // 5MB
+                if (file.size > maxSize) {
+                    alert('File size must be less than 5MB');
+                    event.target.value = '';
+                    return;
+                }
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('fileInfo').style.display = 'flex';
+            }
+        }
+
+        function removeFile() {
+            document.getElementById('attachment').value = '';
+            document.getElementById('fileInfo').style.display = 'none';
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            
+            const email = localStorage.getItem('email');
+            
+            if (!email) {
+                alert('You must be logged in to submit a complaint.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            const submitButton = document.getElementById('submitButton');
+            const form = document.getElementById('complaintForm');
+            
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const category = document.getElementById('category').value;
+            const attachment = document.getElementById('attachment').files[0];
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+            
+            try {
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('description', description);
+                formData.append('category', category);
+                formData.append('createdByEmail', email);
+                if (attachment) {
+                    formData.append('attachment', attachment);
+                }
+
+                const response = await fetch('http://localhost:5000/complaints', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    alert('Complaint submitted successfully');
+                    form.reset();
+                    removeFile();
+                } else {
+                    const errorData = await response.json();
+                    alert('Failed to submit complaint: ' + (errorData.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to submit complaint. Please check your connection and try again.');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Complaint';
+            }
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+        
+        function goBack() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

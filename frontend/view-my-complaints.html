@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View My Complaints - Smart Student Complaint Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="enhancements.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .page-header {
+            background: var(--primary);
+            border-bottom: 1px solid rgba(15, 23, 42, 0.4);
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            color: #E5E7EB;
+        }
+
+        .page-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-header-title span {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            opacity: 0.9;
+        }
+
+        .page-header-title h2 {
+            margin: 0.1rem 0 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2.25rem 1.75rem;
+            background: var(--bg-color);
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .dashboard-header {
+            padding: 1.75rem 2rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .dashboard-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .dashboard-subtitle {
+            margin-top: 0.4rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--surface);
+        }
+
+        thead {
+            background: #EEF2FF;
+        }
+
+        th {
+            padding: 0.9rem 1.25rem;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 0.95rem 1.25rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr {
+            transition: background-color 0.15s ease;
+        }
+
+        tbody tr:hover td {
+            background: #E0E7FF;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .status-pending {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+
+        .status-in-progress {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: #2563EB;
+        }
+
+        .status-resolved {
+            background-color: rgba(22, 163, 74, 0.1);
+            color: #16A34A;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 999px;
+        }
+
+        .priority-high {
+            background-color: rgba(220, 38, 38, 0.08);
+            color: #DC2626;
+        }
+
+        .priority-medium {
+            background-color: rgba(245, 158, 11, 0.08);
+            color: #D97706;
+        }
+
+        .priority-low {
+            background-color: rgba(37, 99, 235, 0.06);
+            color: #1D4ED8;
+        }
+
+        .view-button {
+            padding: 0.4rem 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #FFFFFF;
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .view-button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .empty-state,
+        .loading-state,
+        .error-state {
+            padding: 3.5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .error-state {
+            color: #DC2626;
+        }
+
+        .date-cell {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .complaint-id {
+            font-family: 'SF Mono', ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.8rem;
+        }
+
+        .summary-cell {
+            max-width: 260px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 23, 42, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-lg);
+            animation: modalFadeIn 0.25s ease-out;
+            border: 1px solid var(--border);
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to right, var(--primary), #1D4ED8);
+            color: white;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .close-button {
+            background: transparent;
+            border: none;
+            font-size: 1.35rem;
+            cursor: pointer;
+            color: #E5E7EB;
+            padding: 0.15rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 9999px;
+            transition: all 0.2s;
+        }
+
+        .close-button:hover {
+            background: rgba(15, 23, 42, 0.25);
+            color: #FFFFFF;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            max-height: 70vh;
+            background: var(--bg-color);
+        }
+
+        .modal-footer {
+            padding: 0.9rem 1.5rem 1.2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            background: var(--surface);
+        }
+
+        .detail-row {
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .detail-value {
+            color: var(--text-primary);
+            background: #EEF2FF;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            word-break: break-word;
+            font-size: 0.9375rem;
+        }
+
+        .description-value {
+            white-space: pre-wrap;
+            line-height: 1.6;
+            max-height: 260px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #F9FAFB;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+        }
+
+        .detail-row.full-width {
+            width: 100%;
+        }
+
+        .resolution-box {
+            background: #D1FAE5;
+            border: 1px solid #6EE7B7;
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .admin-response-box {
+            background: #DBEAFE;
+            border: 1px solid #93C5FD;
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1.75rem 1.25rem;
+            }
+
+            .dashboard-container {
+                border-radius: 0.75rem;
+            }
+
+            .dashboard-header {
+                padding: 1.25rem 1.5rem;
+            }
+
+            th, td {
+                padding: 0.75rem 0.9rem;
+            }
+
+            .table-wrapper {
+                overflow-x: scroll;
+            }
+
+            table {
+                min-width: 800px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 0.9rem 1.2rem;
+            }
+
+            .dashboard-header h1 {
+                font-size: 1.25rem;
+            }
+
+            .status-badge, .priority-badge {
+                font-size: 0.6875rem;
+                padding: 3px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div class="page-header-left">
+            <button class="back-button" onclick="goBack()">
+                <span>←</span>
+                Back
+            </button>
+            <div class="page-header-title">
+                <span>My Complaints</span>
+                <h2>Smart Student Complaint Management System</h2>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1>My Complaints</h1>
+                <p class="dashboard-subtitle">Track the progress and status of every complaint you’ve submitted.</p>
+            </div>
+            <div class="table-wrapper">
+                <table id="complaintsTable">
+                    <thead>
+                        <tr>
+                            <th>Complaint ID</th>
+                            <th>Title</th>
+                            <th>Summary</th>
+                            <th>Status</th>
+                            <th>Date & Time</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+                    <tbody id="complaintsBody">
+                        <tr>
+                            <td colspan="6" class="loading-state">
+                                <p>Loading complaints...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complaint Details Modal -->
+    <div id="complaintModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Complaint Details</h3>
+                <button class="close-button" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="complaintDetails">
+                <!-- Details will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store complaints globally
+        let allComplaintsData = [];
+        
+        // Authentication Guard - Check at the very top
+        (function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const role = localStorage.getItem('role');
+            
+            if (isLoggedIn !== 'true' || role !== 'student') {
+                alert('Unauthorized access');
+                window.location.href = 'login.html';
+                return;
+            }
+        })();
+
+        async function fetchComplaints() {
+            const tbody = document.getElementById('complaintsBody');
+            const loggedInEmail = localStorage.getItem('email');
+            
+            if (!loggedInEmail) {
+                alert('Email not found. Please login again.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:5000/complaints');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch complaints');
+                }
+                
+                const allComplaints = await response.json();
+                
+                // Filter complaints for the logged-in student
+                const studentComplaints = allComplaints.filter(complaint => 
+                    complaint.createdByEmail === loggedInEmail
+                );
+                
+                // Store filtered complaints globally
+                allComplaintsData = studentComplaints;
+                
+                if (studentComplaints.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <p>No complaints found. Submit a complaint to see it here.</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                tbody.innerHTML = studentComplaints.map((complaint, index) => {
+                    const formattedDateTime = formatDateTime(complaint.date);
+                    const statusClass = getStatusClass(complaint.status);
+                    const summary = generateSummary(complaint.description || '');
+                    const complaintId = complaint._id || complaint.id || complaint.complaintId || index;
+                    
+                    const hasAttachment = complaint.attachmentPath ? '📎' : '';
+                    return `
+                        <tr>
+                            <td><span class="complaint-id">${complaint.complaintId || 'N/A'}</span></td>
+                            <td>${escapeHtml(complaint.title || 'N/A')} ${hasAttachment}</td>
+                            <td class="summary-cell">${escapeHtml(summary)}</td>
+                            <td><span class="status-badge ${statusClass}">${escapeHtml(complaint.status || 'Pending')}</span></td>
+                            <td class="date-cell">${formattedDateTime}</td>
+                            <td>
+                                <button class="view-button view-btn" data-tooltip="View details" data-id="${complaintId}">View</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+                
+                // Attach event listeners to all View buttons
+                attachViewButtonListeners();
+                
+            } catch (error) {
+                console.error('Error fetching complaints:', error);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="error-state">
+                            <p>Error loading complaints. Please check your connection and try again.</p>
+                        </td>
+                    </tr>
+                `;
+                alert('Failed to fetch complaints. Please check your connection and ensure the backend server is running.');
+            }
+        }
+        
+        function generateSummary(description) {
+            if (!description || description.trim() === '') {
+                return 'No description available';
+            }
+            
+            // Remove HTML tags if any
+            const text = description.replace(/<[^>]*>/g, '').trim();
+            
+            // Try to get first sentence
+            const firstSentenceMatch = text.match(/^[^.!?]+[.!?]/);
+            if (firstSentenceMatch) {
+                const firstSentence = firstSentenceMatch[0].trim();
+                if (firstSentence.length <= 100) {
+                    return firstSentence;
+                }
+            }
+            
+            // Otherwise, get first 12-15 words
+            const words = text.split(/\s+/);
+            const wordCount = Math.min(15, words.length);
+            const summary = words.slice(0, wordCount).join(' ');
+            
+            return summary + (words.length > wordCount ? '...' : '');
+        }
+        
+        function formatDateTime(isoString) {
+            if (!isoString) return 'Date not available';
+            
+            const dateObj = new Date(isoString);
+            
+            if (isNaN(dateObj.getTime())) {
+                return 'Date not available';
+            }
+            
+            const formattedDate = dateObj.toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "short",
+                year: "numeric"
+            });
+
+            const formattedTime = dateObj.toLocaleTimeString("en-IN", {
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+            
+            return `${formattedDate} · ${formattedTime}`;
+        }
+        
+        function attachViewButtonListeners() {
+            const viewButtons = document.querySelectorAll('.view-btn');
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const complaintId = this.getAttribute('data-id');
+                    const complaint = allComplaintsData.find(c => {
+                        const cId = c._id || c.id || c.complaintId;
+                        return String(cId) === String(complaintId);
+                    });
+                    
+                    if (complaint) {
+                        viewComplaintDetails(complaint);
+                    } else {
+                        alert('Complaint not found');
+                    }
+                });
+            });
+        }
+        
+        function viewComplaintDetails(complaint) {
+            const modal = document.getElementById('complaintModal');
+            const detailsContainer = document.getElementById('complaintDetails');
+            
+            // Format the date using the complaint.date field
+            const dateObj = new Date(complaint.date);
+            const formattedDate = isNaN(dateObj.getTime()) 
+                ? 'Date not available' 
+                : formatDateTime(complaint.date);
+            
+            // Create HTML for complaint details (body only – header/footer are static)
+            const attachmentHTML = complaint.attachmentPath ? `
+                <div class="detail-row">
+                    <span class="detail-label">Attachment</span>
+                    <div class="detail-value">
+                        <button class="btn btn-secondary" onclick="viewAttachment('${complaint.attachmentPath}', '${complaint.attachmentType}')" style="padding:0.5rem 1rem;font-size:0.875rem">
+                            📎 View Attachment
+                        </button>
+                    </div>
+                </div>
+            ` : '';
+
+            const detailsHTML = `
+                <div class="detail-row">
+                    <span class="detail-label">Complaint ID</span>
+                    <div class="detail-value">${escapeHtml(complaint.complaintId || complaint._id || 'N/A')}</div>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Title</span>
+                    <div class="detail-value">${escapeHtml(complaint.title || 'N/A')}</div>
+                </div>
+                <div class="detail-row full-width">
+                    <span class="detail-label">Description</span>
+                    <div class="description-value">${escapeHtml(complaint.description || 'No description provided')}</div>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Category</span>
+                    <div class="detail-value">${escapeHtml(complaint.category || 'N/A')}</div>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Priority</span>
+                    <div class="detail-value">
+                        <span class="priority-badge ${getPriorityClass(complaint.priority || 'medium')}">
+                            ${escapeHtml(complaint.priority || 'N/A')}
+                        </span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <div class="detail-value">
+                        <span class="status-badge ${getStatusClass(complaint.status || 'pending')}">
+                            ${escapeHtml(complaint.status || 'Pending')}
+                        </span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date & Time</span>
+                    <div class="detail-value">${formattedDate}</div>
+                </div>
+                ${attachmentHTML}
+                ${complaint.adminResponse ? `
+                <div class="detail-row full-width" style="margin-top:1.5rem">
+                    <span class="detail-label" style="color:#2563EB;font-size:0.9rem;font-weight:600">📢 Admin Response</span>
+                    <div class="detail-value" style="background:#DBEAFE;border-color:#93C5FD;color:#1E40AF;padding:1rem">
+                        ${escapeHtml(complaint.adminResponse)}
+                    </div>
+                    ${complaint.lastUpdated ? `<small style="color:var(--text-secondary);margin-top:0.5rem;display:block;font-size:0.8rem">Last Updated On: ${formatDateTime(complaint.lastUpdated)}</small>` : ''}
+                </div>
+                ` : ''}
+            `;
+            
+            // Update the modal content
+            detailsContainer.innerHTML = detailsHTML;
+            
+            // Show the modal and prevent body scroll
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Focus the modal for better accessibility
+            modal.setAttribute('aria-hidden', 'false');
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('complaintModal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('complaintModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            const modal = document.getElementById('complaintModal');
+            if (event.key === 'Escape' && modal && window.getComputedStyle(modal).display === 'flex') {
+                closeModal();
+            }
+        });
+        
+        function getStatusClass(status) {
+            const statusLower = (status || '').toLowerCase();
+            if (statusLower === 'pending') {
+                return 'status-pending';
+            } else if (statusLower === 'in progress') {
+                return 'status-in-progress';
+            } else if (statusLower === 'resolved') {
+                return 'status-resolved';
+            }
+            return 'status-pending';
+        }
+        
+        function getPriorityClass(priority) {
+            const priorityLower = (priority || '').toLowerCase();
+            if (priorityLower === 'high') {
+                return 'priority-high';
+            } else if (priorityLower === 'medium') {
+                return 'priority-medium';
+            } else if (priorityLower === 'low') {
+                return 'priority-low';
+            }
+            return 'priority-low';
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function viewAttachment(filename, mimetype) {
+            const url = `http://localhost:5000/complaints/attachment/${filename}`;
+            if (mimetype && mimetype.startsWith('image/')) {
+                window.open(url, '_blank');
+            } else {
+                // Download PDF
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'student.html';
+        }
+        
+        // Fetch complaints on page load
+        window.addEventListener('DOMContentLoaded', fetchComplaints);
+    </script>
+</body>
+</html>
+
